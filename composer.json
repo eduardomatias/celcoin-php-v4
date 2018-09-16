@@ -1,0 +1,22 @@
+{
+    "name": "toolstore/celcoin",
+    "description": "API Php para recargas, pagamento de contas e muito mais!",
+    "keywords": ["celcoin", "recargas", "operadoras", "recarregar", "pre-pago", "celular"],
+    "type": "package",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/cache": "^4.2@dev"
+    },
+    "license": "MIT",
+    "authors": [{
+        "name": "Jean Barbosa",
+        "email": "programmer.jean@gmail.com"
+    }],
+    "autoload": {
+        "psr-4": {
+            "Celcoin\\": "src/"
+        }
+    },
+    "version": "1.0.1",
+    "minimum-stability": "dev"
+}
