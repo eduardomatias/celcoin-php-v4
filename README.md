@@ -32,3 +32,5 @@ $celcoin->setDebug(true);
 print_r($celcoin->getProviders());
 
 ```
+
+[Documentation](https://apihmlg.celcoin.com.br/swagger/ui/index)
