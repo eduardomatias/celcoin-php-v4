@@ -6,7 +6,7 @@ API Php para recargas, pagamento de contas e muito mais!
 Se você já conhece o **Composer** (o que é extremamente recomendado), simplesmente adicione a dependência ao seu projeto.
 
 ```
-composer require toolstore/celcoin
+composer require toolstore/celcoin @dev
 ```
 
 ## Obtendo as Operadoras
