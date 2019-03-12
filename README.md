@@ -14,7 +14,7 @@ composer require toolstore/celcoin @dev
 ```
 use Celcoin\CelcoinApi;
 
-$celcoin = new CelcoinApi();
+$celcoin = new CelcoinApi(YOUR CLIENT_ID, YOUR SECRET_KEY);
 print_r($celcoin->getProviders());
 
 ```
@@ -26,7 +26,7 @@ ser verificados ao setar a variável `debug` para `true`.
 ```
 use Celcoin\CelcoinApi;
 
-$celcoin = new CelcoinApi();
+$celcoin = new CelcoinApi(YOUR CLIENT_ID, YOUR SECRET_KEY);
 $celcoin->setDebug(true);
 
 print_r($celcoin->getProviders());
