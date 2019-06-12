@@ -1,4 +1,11 @@
 <?php
+/**
+ * @version    CVS: 1.0.0
+ * @package    Celcoin
+ * @author     Jean Barbosa <programmer.jean@gmail.com>
+ * @copyright  2019 Toolstore
+ * @license    MIT
+ */
 
 namespace Celcoin\Helpers;
 use Symfony\Component\Cache\Simple\FilesystemCache;

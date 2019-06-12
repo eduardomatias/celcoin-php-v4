@@ -8,4 +8,10 @@ require_once '../vendor/autoload.php';
 use Celcoin\CelcoinApi;
 
 $celcoin = new CelcoinApi();
-print_r($celcoin->getProviders());
+$operadoras = $celcoin->getProviders();
+
+if(is_array($operadoras)){
+    foreach ($operadoras as $operadora){
+       print_r($celcoin->getProvidersValues('61', $operadora['providerId']));
+    }
+}

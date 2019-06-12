@@ -1,4 +1,11 @@
 <?php
+/**
+ * @version    CVS: 1.0.0
+ * @package    Celcoin
+ * @author     Jean Barbosa <programmer.jean@gmail.com>
+ * @copyright  2019 Toolstore
+ * @license    MIT
+ */
 
 namespace Celcoin;
 
@@ -66,6 +73,86 @@ class CelcoinApi
         $this->getToken();
     }
 
+    /**
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param string $clientId
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        return $this->secretKey;
+    }
+
+    /**
+     * @param string $secretKey
+     */
+    public function setSecretKey($secretKey)
+    {
+        $this->secretKey = $secretKey;
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfigs()
+    {
+        return $this->configs;
+    }
+
+    /**
+     * @param array $configs
+     */
+    public function setConfigs($configs)
+    {
+        $this->configs = $configs;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param array $response
+     */
+    public function setResponse($response)
+    {
+        $this->response = $response;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param bool $debug
+     */
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;
+    }
+
 
     /**
      * Send request to server
@@ -79,7 +166,6 @@ class CelcoinApi
      */
     public function sendRequest($method, $uri = '', array $options = [])
     {
-
         $client = new Client();
         $this->response = $client->request($method, $uri, $options);
 

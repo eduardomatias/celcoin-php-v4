@@ -18,15 +18,33 @@ $celcoin = new CelcoinApi(YOUR CLIENT_ID, YOUR SECRET_KEY);
 print_r($celcoin->getProviders());
 
 ```
+
+## Obtendo os valores das operadoras
+
+```
+use Celcoin\CelcoinApi;
+
+$celcoin = new CelcoinApi();
+$operadoras = $celcoin->getProviders();
+
+if(is_array($operadoras)){
+    foreach ($operadoras as $operadora){
+       print_r($celcoin->getProvidersValues('61', $operadora['providerId'])); //Código Regional de Brasília
+    }
+}
+
+```
+
 ## Depuração
 
 Todas as tentativas de transação com o WebService e seus conteúdos podem
 ser verificados ao setar a variável `debug` para `true`.
 
+obs: o ambinte de homolgação retorna dados estáticos
 ```
 use Celcoin\CelcoinApi;
 
-$celcoin = new CelcoinApi(YOUR CLIENT_ID, YOUR SECRET_KEY);
+$celcoin = new CelcoinApi();
 $celcoin->setDebug(true);
 
 print_r($celcoin->getProviders());
