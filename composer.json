@@ -1,5 +1,5 @@
 {
-    "name": "toolstore/celcoin",
+    "name": "toolstore/celcoin-php",
     "description": "API Php para recargas, pagamento de contas e muito mais!",
     "keywords": ["celcoin", "recargas", "operadoras", "recarregar", "pre-pago", "celular"],
     "type": "package",
