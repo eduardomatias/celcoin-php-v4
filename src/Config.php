@@ -1,23 +1,25 @@
 <?php
 
 return [
-    'version' => '/v1',
+    'version' => '/v4',
     "api" => "https://api.celcoin.com.br",
-    'api_homologation' => 'https://apihmlg.celcoin.com.br',
-    'client_id' => 'ZtEZqsQoR8FzmEY',
-    'client_secret' => '6ljt1Xo4w84tf0B',
+    'api_homologation' => 'https://sandbox-apicorp.celcoin.com.br',
+    'client_id' => 'teste',
+    'client_secret' => 'teste',
     'debug' => false,
 
     /*
-    | Principais Endpoints da platforma Celcoin
+    | Endpoints utilizados - Celcoin
     |
     */
     "paths" => [
-        'Token' => '/token',
-        'Merchant' => '/merchant/info',
-        'ProviderValues' => '/transactions/topups/provider_values',
         'Providers' => '/transactions/topups/providers',
+        'ProviderValues' => '/transactions/topups/provider-values',
+        'FindProvider' => '/transactions/topups/find-providers',
         'Topup' => '/transactions/topups',
-        'Transaction' => '/transactions',
+        'StatusTransaction' => '/transactions/status-consult'
+        // 'Token' => '/token',
+        // 'Merchant' => '/merchant/info',
+        // 'Transaction' => '/transactions',
     ],
 ];

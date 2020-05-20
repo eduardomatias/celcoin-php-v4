@@ -1,22 +1,25 @@
 {
-    "name": "toolstore/celcoin-php",
-    "description": "API Php para recargas, pagamento de contas e muito mais!",
+    "name": "eduardomatias/celcoin-php-v4",
+    "description": "Celcoin API v4 - Php",
     "keywords": ["celcoin", "recargas", "operadoras", "recarregar", "pre-pago", "celular"],
     "type": "package",
     "require": {
-        "guzzlehttp/guzzle": "^6.3",
-        "symfony/cache": "4.2.12"
+        "symfony/cache": "4.2.12",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "license": "MIT",
     "authors": [{
         "name": "Jean Barbosa",
         "email": "programmer.jean@gmail.com"
+    },{
+        "name": "Eduardo Matias",
+        "email": "eduardomatias.1989@gmail.com"
     }],
     "autoload": {
         "psr-4": {
             "Celcoin\\": "src/"
         }
     },
-    "version": "1.0.1",
+    "version": "2.0.0",
     "minimum-stability": "dev"
 }

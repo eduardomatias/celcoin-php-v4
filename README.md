@@ -1,54 +1,30 @@
-# Celcoin API-PHP
+# Celcoin API-PHP v4
 API Php para recargas, pagamento de contas e muito mais!
 
-## Instalação
-### Composer
-Se você já conhece o **Composer** (o que é extremamente recomendado), simplesmente adicione a dependência ao seu projeto.
+## Instalação - Composer
 
 ```
-composer require toolstore/celcoin @dev
+composer require eduardomatias/celcoin-php-v4 @dev
 ```
 
-## Obtendo as Operadoras
+### Celcoin.class.php
 
-```
-use Celcoin\CelcoinApi;
+```php
+<?php
 
-$celcoin = new CelcoinApi(YOUR CLIENT_ID, YOUR SECRET_KEY);
-print_r($celcoin->getProviders());
+$celcoin = new Celcoin();
 
-```
+// retorna a operadora e os valores disponiveis para recarga
+$celcoin->valoresOperadora($ddd, $numero);
 
-## Obtendo os valores das operadoras
+// realiza recarga
+$celcoin->recargar($valor, $ddd, $numero, $cod_operadora, $assinante, $cpf_cnpj, $capturar = true);
 
-```
-use Celcoin\CelcoinApi;
-
-$celcoin = new CelcoinApi();
-$operadoras = $celcoin->getProviders();
-
-if(is_array($operadoras)){
-    foreach ($operadoras as $operadora){
-       print_r($celcoin->getProvidersValues('61', $operadora['providerId'])); //Código Regional de Brasília
-    }
-}
+// captura recarga
+$celcoin->capturar($transaction_id);
 
 ```
 
-## Depuração
+[sandbox/swagger](https://sandbox-apicorp.celcoin.com.br/swagger/index.html)
 
-Todas as tentativas de transação com o WebService e seus conteúdos podem
-ser verificados ao setar a variável `debug` para `true`.
-
-obs: o ambinte de homolgação retorna dados estáticos
-```
-use Celcoin\CelcoinApi;
-
-$celcoin = new CelcoinApi();
-$celcoin->setDebug(true);
-
-print_r($celcoin->getProviders());
-
-```
-
-[Documentation](https://apihmlg.celcoin.com.br/swagger/ui/index)
+[toolstore/celcoin-php v1](https://github.com/toolstore/celcoin-php)

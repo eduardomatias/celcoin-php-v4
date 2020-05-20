@@ -10,7 +10,6 @@
 namespace Celcoin;
 
 use GuzzleHttp\Client;
-use Celcoin\Helpers\Cache;
 
 class CelcoinApi
 {
@@ -47,6 +46,8 @@ class CelcoinApi
 
     protected $debug = false;
 
+    protected $countryCode = 55;
+
     /**
      * celcoin API constructor.
      *
@@ -70,7 +71,6 @@ class CelcoinApi
 
         }
 
-        $this->getToken();
     }
 
     /**
@@ -166,49 +166,27 @@ class CelcoinApi
      */
     public function sendRequest($method, $uri = '', array $options = [])
     {
-        $client = new Client();
-        $this->response = $client->request($method, $uri, $options);
+
+        $url = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
+        $url .= $this->configs['version'] . $uri;
+
+        $headers = [
+            'headers' => [
+                "Authorization" => "Basic " . base64_encode($this->clientId . ':' . $this->secretKey),
+                "Content-Type" => "application/json"
+            ]
+        ];
+
+        $options = array_merge($headers, $options);
+
+        $client = new Client(['verify' => false]);
+        $this->response = $client->request($method, $url, $options);
 
         if ($this->response->getStatusCode() == 200) {
             return json_decode($this->response->getBody(), true);
         }
 
         return false;
-    }
-
-    /**
-     * Get Token access
-     *
-     * @return array|bool|mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public function getToken()
-    {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['paths']['Token'];
-
-        $options = [
-            'form_params' => [
-                'grant_type' => 'client_credentials',
-                'client_id' => $this->clientId,
-                'client_secret' => $this->secretKey,
-            ]
-        ];
-
-        $response = $this->sendRequest('POST', $uri, $options);
-
-        if ($response === false) {
-            return '';
-        }
-
-        $this->token = $response;
-
-        $cache = new Cache();
-        $cache->saveTokenInCache($this->token, 200);
-
-        return $this->token;
-
     }
 
     /**
@@ -219,8 +197,7 @@ class CelcoinApi
      */
     public function getMerchantInfo()
     {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['version'] . $this->configs['paths']['Merchant'];
+        $uri = $this->configs['paths']['Merchant'];
 
         $options = [
             'headers' => [
@@ -242,14 +219,15 @@ class CelcoinApi
      *
      * @return bool|mixed
      */
-    public function getProviders()
+    public function getProviders($ddd = "31")
     {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['version'] . $this->configs['paths']['Providers'];
+        $uri = $this->configs['paths']['Providers'];
 
         $options = [
-            'headers' => [
-                'Authorization' => $this->token['token_type'] . ' ' . $this->token['access_token'],
+            'query' => [
+                "stateCode" => $ddd, 
+                "type" => "0",
+                "category" => "1"
             ]
         ];
 
@@ -271,16 +249,32 @@ class CelcoinApi
      */
     public function getProvidersValues($regionalCode, $providerId)
     {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['version'] . $this->configs['paths']['ProviderValues'];
+        $uri = $this->configs['paths']['ProviderValues'];
 
         $options = [
-            'headers' => [
-                'Authorization' => $this->token['token_type'] . ' ' . $this->token['access_token'],
-            ],
             'query' => [
-                'regional_code' => $regionalCode,
+                'stateCode' => $regionalCode,
                 'providerId' => $providerId
+            ]
+        ];
+
+        $response = $this->sendRequest('GET', $uri, $options);
+
+        if ($response === false) {
+            return '';
+        }
+
+        return $response;
+    }
+
+    public function findProviders($stateCode, $PhoneNumber)
+    {
+        $uri = $this->configs['paths']['FindProvider'];
+
+        $options = [
+            'query' => [
+                'stateCode' => $stateCode,
+                'PhoneNumber' => $PhoneNumber
             ]
         ];
 
@@ -299,37 +293,89 @@ class CelcoinApi
      * @param $value          Value of your topup
      * @param $regionalCode   Code of regional
      * @param $phoneNumber    Phone number
-     * @param $countryCode    Country identifier code
      * @param $providerId     Provider unique identifier
-     * @param bool $capture Auto-commit (Default is true)
+     * @param $signerCode     
+     * @param $cpfCnpj        
+     * @param bool $capture   Auto-commit (Default is true)
      * @return bool|mixed|string
      */
-    public function topups($value, $regionalCode, $phoneNumber, $countryCode, $providerId, $capture = true)
+    public function topups($value, $regionalCode, $phoneNumber, $providerId, $signerCode, $cpfCnpj, $capture = true)
     {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['version'] . $this->configs['paths']['Topup'];
+        $uri = $this->configs['paths']['Topup'];
 
         $options = [
-            'headers' => [
-                'Authorization' => $this->token['token_type'] . ' ' . $this->token['access_token'],
-            ],
-            'form_params' => [
-                'valor' => $value,
-                'regional_code' => $regionalCode,
-                'phone_number' => $phoneNumber,
-                'country_code' => $countryCode,
-                'providerId' => $providerId,
-                'capture' => $capture,
+            'json' => [
+                "externalTerminal" => "JCDiniz",
+                // "externalNsu" => int, // referencia do sistema do cliente
+                "topupData" => [
+                    "value" => (float)$value
+                ],
+                "cpfCnpj" => $cpfCnpj,
+                "signerCode" => $signerCode,
+                "providerId" => (int)$providerId,
+                "phone" => [
+                    "countryCode" => $this->countryCode,
+                    "stateCode" => (int)$regionalCode,
+                    "number" => (int)$phoneNumber
+                ]
+            ]
+        ];
+        $response = $this->sendRequest('POST', $uri, $options);
+
+        // captura o valor
+        if ($capture && !empty($response['transactionId'])) {
+            $response['capture'] = $this->capture($response['transactionId']);
+        }
+        
+        if ($response === false) {
+            return '';
+        }
+
+        return $response;
+    }
+
+    public function capture($transactionId)
+    {
+        $uri = $this->configs['paths']['Topup'] . "/$transactionId/capture";
+        
+        $options = [
+            'json' => [
+                // "externalNSU" => 0,
+                "externalTerminal" => "JCDiniz"
             ]
         ];
 
-        $response = $this->sendRequest('POST', $uri, $options);
+        $response = $this->sendRequest('PUT', $uri, $options);
+        if ($response === false) {
+            return '';
+        }
+
+        // verifica erro na captura
+        if ($response['errorCode'] != '000') {
+            throw new Exception($response['message'] ? : "Não foi possível realizar a recarga.");
+        }
+
+        return $response;
+    }
+    
+    public function getStatusTransaction($transactionId)
+    {
+        $uri = $this->configs['paths']['StatusTransaction'];
+
+        $options = [
+            'query' => [
+                'transactionId' => $transactionId,
+            ]
+        ];
+
+        $response = $this->sendRequest('GET', $uri, $options);
 
         if ($response === false) {
             return '';
         }
 
         return $response;
+
     }
 
     /**
@@ -340,13 +386,9 @@ class CelcoinApi
      */
     public function getTransaction($transactionId)
     {
-        $uri = $this->debug ? $this->configs['api_homologation'] : $this->configs['api'];
-        $uri .= $this->configs['version'] . $this->configs['paths']['Transaction'];
+        $uri = $this->configs['paths']['Transaction'];
 
         $options = [
-            'headers' => [
-                'Authorization' => $this->token['token_type'] . ' ' . $this->token['access_token'],
-            ],
             'query' => [
                 'transactionId' => $transactionId,
             ]
