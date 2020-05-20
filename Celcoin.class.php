@@ -44,7 +44,7 @@ class Celcoin extends CelcoinApi
     }
     
     // realiza recarga
-    public function recargar($valor, $ddd, $numero, $cod_operadora, $assinante, $cpf_cnpj, $capturar = true)
+    public function recaregar($valor, $ddd, $numero, $cod_operadora, $assinante, $cpf_cnpj, $capturar = true)
     {
         try {
 
