@@ -18,7 +18,7 @@ $celcoin = new Celcoin();
 $celcoin->valoresOperadora($ddd, $numero);
 
 // realiza recarga
-$celcoin->recaregar($valor, $ddd, $numero, $cod_operadora, $assinante, $cpf_cnpj, $capturar = true);
+$celcoin->recarregar($valor, $ddd, $numero, $cod_operadora, $assinante, $cpf_cnpj, $capturar = true);
 
 // captura recarga
 $celcoin->capturar($transaction_id);

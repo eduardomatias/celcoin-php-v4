@@ -16,6 +16,6 @@ $cpf_cnpj = "28073338009";
 
 $valore_operadora = $celcoin->valoresOperadora($ddd, $numero);
 
-$recarga = $celcoin->recaregar($valor, $ddd, $numero, $valore_operadora['cod_operadora'], $assinante, $cpf_cnpj);
+$recarga = $celcoin->recarregar($valor, $ddd, $numero, $valore_operadora['cod_operadora'], $assinante, $cpf_cnpj);
 
 var_dump($valore_operadora, $recarga['capture']);
