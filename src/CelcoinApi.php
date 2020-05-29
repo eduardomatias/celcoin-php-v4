@@ -10,6 +10,9 @@
 namespace Celcoin;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 
 class CelcoinApi
 {
@@ -179,8 +182,13 @@ class CelcoinApi
 
         $options = array_merge($headers, $options);
 
-        $client = new Client(['verify' => false]);
-        $this->response = $client->request($method, $url, $options);
+        try {
+            $client = new Client(['verify' => false]);
+            $this->response = $client->request($method, $url, $options);
+        } catch (ClientException $e) {
+            return json_decode(Psr7\str($e->getResponse()), true);
+        }
+
 
         if ($this->response->getStatusCode() == 200) {
             return json_decode($this->response->getBody(), true);
@@ -352,7 +360,7 @@ class CelcoinApi
 
         // verifica erro na captura
         if ($response['errorCode'] != '000') {
-            throw new Exception($response['message'] ? : "Não foi possível realizar a recarga.");
+            throw new \Exception($response['message'] ? : "Não foi possível realizar a recarga.");
         }
 
         return $response;
